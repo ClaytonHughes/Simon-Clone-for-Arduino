@@ -1,5 +1,5 @@
 /* 
-Pin definitions for Arduino hardware.
+ Pin definitions for Arduino hardware.
  */
 
 #ifndef PINS_H
@@ -22,3 +22,4 @@ const int YELLOW_LED_PIN = 10;
 const int SPEAKER_PIN = 11;
 
 #endif
+

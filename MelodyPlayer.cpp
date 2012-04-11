@@ -52,21 +52,12 @@ void MelodyPlayer::playLosingMelody()
     playMelody(losingMelodyTones, losingMelodyBeats, losingMelodyTempo, losingMelodyLength);
 }
 
-void MelodyPlayer::playWinningMelody(int turnsAccomplished)
+void MelodyPlayer::playWinningMelody(int fireworks)
 {
     playMelody(winningMelodyTones, winningMelodyBeats, winningMelodyTempo, winningMelodyLength);
     
-    // Play fireworks for harder modes
-    if (turnsAccomplished == hardModeTurns)
-    {
-        // Hard mode; play three fireworks sounds
-        playFireworks(3);
-    }
-    else if (turnsAccomplished == superHardModeTurns)
-    {
-        // Super-hard mode; play six fireworks sounds
-        playFireworks(6);
-    }
+    if(fireworks)
+      playFireworks(fireworks);
 }
 
 // Play a special melody as an easter egg

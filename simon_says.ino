@@ -1,4 +1,3 @@
-
 /*
 
  Simon Says Project
@@ -13,16 +12,12 @@
 #include "gameplay.h"
 #include "Input.h"
 #include "Output.h"
-#include "Mode.h"
+#include "Modes.h"
 
 #include "SNESpad.h"
 
 Mode* currentMode;
 int curTime, prevTime;
-
-////////////////////////////////////
-boolean superHardMode = false; // DELETE ME! - COMPAT SHIM
-////////////////////////////////////
 
 void setup()
 {

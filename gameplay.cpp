@@ -25,10 +25,7 @@ const int greenTone = NOTE_D5;
 const int blueTone = NOTE_E5;
 const int yellowTone = NOTE_B5;
 
-// Gameplay elements
-const int easyModeTurns = 7;
-const int hardModeTurns = 11;
-const int superHardModeTurns = 15;
+
 
 // States for buttons
 int red_button_state;

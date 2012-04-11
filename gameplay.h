@@ -21,18 +21,10 @@ extern int LEDDisplayTime; // time to show the LED in ms
 // Time to play a Simon Says sound in ms (should probably match LEDDisplayTime)
 extern const int soundPlayTime;
 
-extern const int easterEggCheatCode[11];
-extern const int easterEggCheatCodeLength;
-
 extern const int redTone;
 extern const int greenTone;
 extern const int blueTone;
 extern const int yellowTone;
-
-// Gameplay elements
-extern const int easyModeTurns;
-extern const int hardModeTurns;
-extern const int superHardModeTurns;
 
 // States for buttons
 extern int red_button_state;

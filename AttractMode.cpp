@@ -1,16 +1,8 @@
-#include "Mode.h"
+#include "Modes.h"
 #include "gameplay.h"
 #include "SNESPad.h"
 #include "Input.h"
 #include "Output.h"
-
-Mode* Mode::Update(int dT)
-{
-  return this;
-}
-
-
-/////////////////////////////////////////////////
 
 const int easterEggCheatCode[] = { SNES_UP, SNES_UP, SNES_DOWN, SNES_DOWN, SNES_LEFT, SNES_RIGHT, SNES_LEFT, SNES_RIGHT, SNES_B, SNES_A, SNES_START };
 const int easterEggCheatCodeLength = sizeof(easterEggCheatCode) / sizeof(easterEggCheatCode[0]);
@@ -93,55 +85,6 @@ void AttractMode::UpdateLights(int dT)
     attractLightPos = 0;
     time = 0;
   }
-}
-
-
-/////////////////////////////////////////////////
-
-GameMode::GameMode(int difficulty)
-{
-  if (difficulty == 3)
-  {
-    turnsUntilWin = superHardModeTurns;
-    LEDDisplayTime = 75;
-    delayBetweenLights = 75;
-  }
-  else if(difficulty == 2)
-  {
-    turnsUntilWin = hardModeTurns;
-    LEDDisplayTime = 200;
-    delayBetweenLights = 200;
-  }
-  else
-  {
-    turnsUntilWin = easyModeTurns;
-    LEDDisplayTime = 200;
-    delayBetweenLights = 200;
-  }
-}
-
-
-Mode* GameMode::Update(int dT)
-{
-  return this;
-}
-
-
-/////////////////////////////////////////////////
-
-DelayMode::DelayMode(Mode* next, int time)
-:
-mNext(next),
-mDelay(time)
-{  
-}
-
-Mode* DelayMode::Update(int dT)
-{
-  mDelay -= dT;
-  if(mDelay <= 0)
-    return mNext;
-  return this;
 }
 
 
