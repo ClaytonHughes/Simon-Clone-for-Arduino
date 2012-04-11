@@ -37,9 +37,6 @@ const int easyModeTurns = 7;
 const int hardModeTurns = 11;
 const int superHardModeTurns = 15;
 
-//Controller input method
-SNESpad snes_pad = SNESpad(SNESPAD_STROBE_PIN, SNESPAD_CLOCK_PIN, SNESPAD_DATA_PIN);
-
 // States for buttons
 int red_button_state;
 int green_button_state;

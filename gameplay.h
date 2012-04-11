@@ -45,9 +45,6 @@ extern const int easyModeTurns;
 extern const int hardModeTurns;
 extern const int superHardModeTurns;
 
-//Controller input method
-extern SNESpad snes_pad;
-
 // States for buttons
 extern int red_button_state;
 extern int green_button_state;

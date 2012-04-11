@@ -8,7 +8,7 @@
 #include "MelodyPlayer.h"
 #include "pins.h"
 #include "gameplay.h"
-#include "buttonInput.h"
+#include "Input.h"
 
 
 // Outputs a random integer between 0 and 3 (corresponding to a color)
@@ -119,16 +119,16 @@ void playSoundForColor(int color)
 void playPressedButtonColorAndSound()
 {
     // Grab first color pressed by the user
-    int pressedColor = getPressedColor();
+    int pressedColor = Input::Get().getPressedColor();
 
     // Light corresponding light
     lightUpColor(pressedColor);
 
     // Loop until the user releases that button
-    while (isPressed(pressedColor))
+    while (Input::Get().isPressed(pressedColor))
     {
         playSoundForColor(pressedColor);
-        updateButtonStates();
+        Input::Get().updateButtonStates();
     }
     noTone(SPEAKER_PIN);
     clearLights();

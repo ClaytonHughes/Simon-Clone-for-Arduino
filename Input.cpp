@@ -3,14 +3,37 @@
  */
 
 #include "Arduino.h"
-#include "buttonInput.h"
+#include "Input.h"
 #include "SNESpad.h"
 #include "pins.h"
 #include "gameplay.h"
 
+Input* Input::spInstance = NULL;
+
+Input::Input()
+{
+  pinMode(DIFF_SWITCH_PIN, INPUT);
+  padInput = new SNESpad(SNESPAD_STROBE_PIN, SNESPAD_CLOCK_PIN, SNESPAD_DATA_PIN);
+  
+  spInstance = this;
+}
+
+Input& Input::Get()
+{
+  if(NULL == spInstance)
+    spInstance = new Input();
+    
+  return *spInstance;
+}
+
+int Input::Buttons()
+{
+  return padInput->buttons();
+}
+
 // Returns the button being pressed by the user. If no button
 // is being pressed, returns -1.
-int getPressedColor()
+int Input::getPressedColor()
 {
     // First update buttons states to make sure that we
     // get the most recent information
@@ -41,9 +64,9 @@ int getPressedColor()
 }
 
 // Updates the current state for all of the color buttons
-void updateButtonStates()
+void Input::updateButtonStates()
 {
-    int state = snes_pad.buttons();
+    int state = padInput->buttons();
     red_button_state = state & SNES_A;
     green_button_state = state & SNES_Y;
     blue_button_state = state & SNES_X;
@@ -51,7 +74,7 @@ void updateButtonStates()
 }
 
 // Checks to see if a certain button is being pressed
-boolean isPressed(int color)
+boolean Input::isPressed(int color)
 {
     switch (color)
     {
