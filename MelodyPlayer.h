@@ -5,33 +5,37 @@
 #ifndef MELODYPLAYER_H
 #define MELODYPLAYER_H
 
-class MelodyPlayer
+#include "Modes.h"
+
+class MelodyMode :
+public Mode
 {
     public:
-        MelodyPlayer();
+        MelodyMode(Melody melody, Mode* next);
+        virtual Mode* Update(int dT);
        
         void playTone(int, int);
-        void playWinningMelody(int);
-        void playLosingMelody();
-        void playEasterEggMelody();
         void playFireworks(int);
     private:
+        Melody mMelody;
+        Mode* mNext;
+    
         void playMelody(const int[], const int[], const int, const int);
 
-        static const int losingMelodyTempo;
-        static const int losingMelodyLength;
-        static const int losingMelodyTones[14];
-        static const int losingMelodyBeats[14];
+        static const int losingTempo;
+        static const int losingLength;
+        static const int losingTones[];
+        static const int losingBeats[];
 
-        static const int winningMelodyTempo;
-        static const int winningMelodyLength;
-        static const int winningMelodyTones[27];
-        static const int winningMelodyBeats[27];
+        static const int winningTempo;
+        static const int winningLength;
+        static const int winningTones[];
+        static const int winningBeats[];
 
-        static const int easterEggMelodyTempo;
-        static const int easterEggMelodyLength;
-        static const int easterEggMelodyTones[13];
-        static const int easterEggMelodyBeats[13];
+        static const int easterEggTempo;
+        static const int easterEggLength;
+        static const int easterEggTones[];
+        static const int easterEggBeats[];
 };
 
 #endif

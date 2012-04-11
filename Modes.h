@@ -2,12 +2,17 @@
 #define MODE_H
 
 #include "Arduino.h"
+#include "gameplay.h"
+
 
 // Represents the mode or state of the application
 class Mode
 {
 public:
-  virtual Mode* Update(int dT) {return this;}
+  virtual Mode* Update(int dT)
+  {
+    return this;
+  }
   virtual ~Mode() {}
 };
 
@@ -45,7 +50,7 @@ public:
 private:
   int turnsUntilWin;
   int LEDDisplayTime;
-  int delayBetweenLights;
+  int delayBetweenLights; // Wait this time (ms) between light display; changes depending on difficulty mode
 };
 
 
@@ -56,8 +61,18 @@ class DelayMode :
 public Mode
 {
 public:
-  DelayMode(Mode* next, int delayTime) {mNext = next; mDelay = delayTime;}
-  virtual Mode* Update(int dT) { mDelay -= dT; if(mDelay <= 0) { return mNext; } else { return this; } }
+  DelayMode(int delayTime, Mode* next)
+  {
+    mNext = next; 
+    mDelay = delayTime;
+  }
+  virtual Mode* Update(int dT)
+  { 
+    mDelay -= dT; 
+    if(mDelay <= 0) 
+      return mNext; 
+    return this; 
+  }
   virtual ~DelayMode() {}
 private:
   Mode* mNext;
@@ -66,6 +81,7 @@ private:
 
 
 #endif
+
 
 
 

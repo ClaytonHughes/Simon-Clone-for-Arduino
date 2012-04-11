@@ -10,28 +10,49 @@
 #include "Output.h"
 
 // Initialize static member variables
-const int MelodyPlayer::losingMelodyTempo = 100;
-const int MelodyPlayer::losingMelodyLength = 14;
-const int MelodyPlayer::losingMelodyTones[14] = { NOTE_C6, 0, NOTE_G5, 0, NOTE_E5, NOTE_A5, NOTE_B5, NOTE_A5, NOTE_GS5, NOTE_AS5, NOTE_GS5, NOTE_G5, NOTE_F5, NOTE_G5 };
-const int MelodyPlayer::losingMelodyBeats[14] = { 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 4 };
+const int MelodyMode::losingTempo = 100;
+const int MelodyMode::losingTones[] = { NOTE_C6, 0, NOTE_G5, 0, NOTE_E5, NOTE_A5, NOTE_B5, NOTE_A5, NOTE_GS5, NOTE_AS5, NOTE_GS5, NOTE_G5, NOTE_F5, NOTE_G5 };
+const int MelodyMode::losingBeats[] = { 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 4 };
+const int MelodyMode::losingLength = sizeof(MelodyMode::losingTones) / sizeof(MelodyMode::losingTones[0]);
 
-const int MelodyPlayer::winningMelodyTempo = 100;
-const int MelodyPlayer::winningMelodyLength = 27;
-const int MelodyPlayer::winningMelodyTones[27] = { NOTE_G4, NOTE_C5, NOTE_E5, NOTE_G5, NOTE_C6, NOTE_E6, NOTE_G6, NOTE_E6, NOTE_GS4, NOTE_C5, NOTE_DS5, NOTE_GS5, NOTE_C6, NOTE_DS6, NOTE_GS6, NOTE_DS6, NOTE_AS4, NOTE_D5, NOTE_F5, NOTE_AS5, NOTE_D6, NOTE_F6, NOTE_AS6, NOTE_AS6, NOTE_AS6, NOTE_AS6, NOTE_C7 };
-const int MelodyPlayer::winningMelodyBeats[27] = { 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 4 };
+const int MelodyMode::winningTempo = 100;
+const int MelodyMode::winningTones[] = { NOTE_G4, NOTE_C5, NOTE_E5, NOTE_G5, NOTE_C6, NOTE_E6, NOTE_G6, NOTE_E6, NOTE_GS4, NOTE_C5, NOTE_DS5, NOTE_GS5, NOTE_C6, NOTE_DS6, NOTE_GS6, NOTE_DS6, NOTE_AS4, NOTE_D5, NOTE_F5, NOTE_AS5, NOTE_D6, NOTE_F6, NOTE_AS6, NOTE_AS6, NOTE_AS6, NOTE_AS6, NOTE_C7 };
+const int MelodyMode::winningBeats[] = { 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 4 };
+const int MelodyMode::winningLength = sizeof(MelodyMode::winningTones) / sizeof(MelodyMode::winningTones[0]);
 
-const int MelodyPlayer::easterEggMelodyTempo = 100;
-const int MelodyPlayer::easterEggMelodyLength = 13;
-const int MelodyPlayer::easterEggMelodyTones[13] = { NOTE_E5, NOTE_E5, 0, NOTE_E5, 0, NOTE_C5, NOTE_E5, 0, NOTE_G5, 0, 0, NOTE_G4, 0 };
-const int MelodyPlayer::easterEggMelodyBeats[13] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1 };
+const int MelodyMode::easterEggTempo = 100;
+const int MelodyMode::easterEggTones[] = { NOTE_E5, NOTE_E5, 0, NOTE_E5, 0, NOTE_C5, NOTE_E5, 0, NOTE_G5, 0, 0, NOTE_G4, 0 };
+const int MelodyMode::easterEggBeats[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1 };
+const int MelodyMode::easterEggLength = sizeof(MelodyMode::easterEggTones) / sizeof(MelodyMode::easterEggTones[0]);;
 
-MelodyPlayer::MelodyPlayer()
+MelodyMode::MelodyMode(Melody melody, Mode* next)
+:
+mMelody(melody),
+mNext(next)
 {
-
 }
 
+Mode* MelodyMode::Update(int dT)
+{
+  switch(mMelody)
+  {
+    case LOSE:
+      playMelody(losingTones, losingBeats, losingTempo, losingLength);
+    break;
+    case SECRET:
+      playMelody(easterEggTones, easterEggBeats, easterEggTempo, easterEggLength);
+    break;
+    default:
+      playMelody(winningTones, winningBeats, winningTempo, winningLength);    
+      int fireworks = mMelody - WIN;
+        playFireworks(fireworks);
+    break;
+  }
+}
+
+
 // Plays the specified tone for the specified duration
-void MelodyPlayer::playTone(int toneToPlay, int duration)
+void MelodyMode::playTone(int toneToPlay, int duration)
 {
     // Rest if 0
     if (toneToPlay == 0)
@@ -47,27 +68,8 @@ void MelodyPlayer::playTone(int toneToPlay, int duration)
     }
 }
 
-void MelodyPlayer::playLosingMelody()
-{
-    playMelody(losingMelodyTones, losingMelodyBeats, losingMelodyTempo, losingMelodyLength);
-}
-
-void MelodyPlayer::playWinningMelody(int fireworks)
-{
-    playMelody(winningMelodyTones, winningMelodyBeats, winningMelodyTempo, winningMelodyLength);
-    
-    if(fireworks)
-      playFireworks(fireworks);
-}
-
-// Play a special melody as an easter egg
-void MelodyPlayer::playEasterEggMelody()
-{
-    playMelody(easterEggMelodyTones, easterEggMelodyBeats, easterEggMelodyTempo, easterEggMelodyLength);
-}
-
 // Play victory fireworks sounds
-void MelodyPlayer::playFireworks(int numFireworks)
+void MelodyMode::playFireworks(int numFireworks)
 {
     // Firework sound:
     // 133 times a second for .18 seconds, then
@@ -94,19 +96,14 @@ void MelodyPlayer::playFireworks(int numFireworks)
     }
 }
 
-void MelodyPlayer::playMelody(const int tones[], const int beats[], const int tempo, const int length)
+void MelodyMode::playMelody(const int tones[], const int beats[], const int tempo, const int length)
 {
-    int curColor = randomColor();
-    int lastColor = curColor;
+    int curColor = random(0,4);
     for (int i = 0; i < length; i++)
     {
-        // Ensure that each color is not the same as the last
-        while (curColor == lastColor)
-        {
-            curColor = randomColor();
-        }
+        // Perturb color by 1-3, so we get a new random color:
+        curColor += random(1,4);
         digitalWrite(curColor + RED_LED_PIN, HIGH);
-        lastColor = curColor;
         playTone(tones[i], beats[i] * tempo);
         Output::Get().clearLights();
     }

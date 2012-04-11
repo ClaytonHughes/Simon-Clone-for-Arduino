@@ -9,8 +9,21 @@
 #include "gameplay.h"
 #include "Output.h"
 #include "Input.h"
+#include "pitches.h"
 
 Output* Output::spInstance = NULL;
+
+// Time to play a Simon Says sound in ms (should probably match LEDDisplayTime)
+const int soundPlayTime = 700;
+
+const int redTone = NOTE_CS6;
+const int greenTone = NOTE_D5;
+const int blueTone = NOTE_E5;
+const int yellowTone = NOTE_B5;
+
+
+
+
 
 Output::Output()
 : mCurTime(0)
@@ -20,8 +33,6 @@ Output::Output()
   pinMode(BLUE_LED_PIN, OUTPUT);
   pinMode(YELLOW_LED_PIN, OUTPUT);
   pinMode(SPEAKER_PIN, OUTPUT);
-
-  melodyPlayer = new MelodyPlayer();
 
   spInstance = this;
 }
@@ -86,7 +97,7 @@ void Output::playColorAndSound(int color, int duration, boolean playAudio)
   // unless you're not playing audio, in which case just wait
   if (playAudio)
   {
-    melodyPlayer->playTone(toneToPlay, duration);
+    //melodyPlayer->playTone(toneToPlay, duration);
   }
   else
   {
@@ -174,17 +185,17 @@ void Output::playPressedButtonColorAndSound()
 
 void Output::PlayWinningMelody(int value)
 {
-  melodyPlayer->playWinningMelody(value);
+  //melodyPlayer->playWinningMelody(value);
 }
 
 void Output::PlayLosingMelody()
 {
-  melodyPlayer->playLosingMelody();
+  //melodyPlayer->playLosingMelody();
 }
 
 void Output::PlayEasterEggMelody()
 {
-  melodyPlayer->playEasterEggMelody();
+  //melodyPlayer->playEasterEggMelody();
 }
 
 
