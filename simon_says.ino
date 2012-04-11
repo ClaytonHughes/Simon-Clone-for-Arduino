@@ -13,106 +13,43 @@
 #include "gameplay.h"
 #include "Input.h"
 #include "Output.h"
+#include "Mode.h"
+
+#include "SNESpad.h"
+
+Mode* currentMode;
+int curTime, prevTime;
+
+////////////////////////////////////
+boolean superHardMode = false; // DELETE ME! - COMPAT SHIM
+////////////////////////////////////
 
 void setup()
 {
   Input::Get();
   Output::Get();
+  currentMode = new AttractMode();
+  prevTime = millis();
 }
 
-// Loop through a "attract mode" light pattern until the user hits
-// the "start" button, triggering an interrupt
 void loop()
 {
-
-  int state = 0;
-  int lastState = 0;
-  int color_i = 0;
-  int timesDisplayed = 0;
-  superHardMode = false;
-
-  // Counter for cheat code state machine
-  int cheatCode_i = 0;
-  // Loop exits when the player presses start... but not when the current step of the cheat code is looking for a start!
-  while(!(state & SNES_START) || (easterEggCheatCode[cheatCode_i] == SNES_START))
-  {
-    state = Input::Get().Buttons();
-
-    // Check for button released, and advance cheat code state machine state if necessary
-    if ((lastState & easterEggCheatCode[cheatCode_i]) && (!(lastState ^ easterEggCheatCode[cheatCode_i])) && (!state))
-    {
-      // The correct button was just released, so advance the state
-      cheatCode_i++;
-    }
-    else if ((state) && (state ^ easterEggCheatCode[cheatCode_i]))
-    {
-      // User is pressing a button but not the correct one, so reset the cheat code state
-      cheatCode_i = 0;
-    }
-    // If the user's done with the cheat code, trigger the easter egg
-    if (cheatCode_i == easterEggCheatCodeLength)
-    {
-      Output::Get().PlayEasterEggMelody();
-      superHardMode = true;
-      cheatCode_i = 0;
-    }
-
-    lastState = state;
-
-    // Loop color pattern--display each color for FastLEDDisplayTime ms
-    // (broken into 32 parts, to increase sampling rate)
-    Output::Get().playColorAndSound(attractModeColors[color_i], FastLEDDisplayTime / 32, false);
-    Output::Get().clearLights();
-    timesDisplayed++;
-    if (timesDisplayed > 31)
-    {
-      timesDisplayed = 0;
-      color_i++;
-    }
-    if (color_i >= 30)
-    {
-      color_i = 0; 
-    }
-  }
-  // Start was pressed, so start the game
-  delay(200);
-  mainGame();
+  curTime = millis();
+  int dT = curTime - prevTime;
+  prevTime = curTime;
+  
+  Input::Get().Update();
+  
+  Mode* newMode = currentMode->Update(dT);
+  if(newMode != currentMode)
+    delete currentMode;
+  currentMode = newMode;
 }
-
-// Sets the difficulty depending on the state of DIFF_SWITCH_PIN
-void setDifficulty()
-{
-  if (superHardMode)
-  {
-    turnsUntilWin = superHardModeTurns;
-    LEDDisplayTime = 75;
-    delayBetweenLights = 75;
-  }
-  else
-  {
-    int diffSwitchState = digitalRead(DIFF_SWITCH_PIN);
-    if (diffSwitchState == HIGH)
-    {
-      turnsUntilWin = hardModeTurns;
-      LEDDisplayTime = 200;
-      delayBetweenLights = 200;
-    }
-    else
-    {
-      turnsUntilWin = easyModeTurns;
-      LEDDisplayTime = 200;
-      delayBetweenLights = 200;
-    }    
-  }
-}
-
 
 // Main game loop. Returns a boolean that signals whether or not to jump
 // straight into the game again (restart) or go into a waiting loop.
 void mainGame()
 {
-  // Set difficulty
-  setDifficulty();
 
   boolean stillPlaying = true;
   boolean wonGame = false;

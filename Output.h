@@ -11,8 +11,11 @@ class Output
 {
 public:
   static Output& Get();
+  void Update(int dT);
 
   // Displays a color and plays the corresponding sound
+  void SetLight(int light, int duration);
+  
   void playColorAndSound(int, int, boolean);
 
   // Lights the LED of the corresponding color
@@ -39,6 +42,8 @@ private:
   static Output* spInstance;
   
   MelodyPlayer* melodyPlayer;
+  int mCurTime;
+  int lightOffTime[4];
 };
 
 #endif

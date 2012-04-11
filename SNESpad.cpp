@@ -23,19 +23,6 @@
 #include "SNESpad.h"
 #include "Arduino.h"
 
-// change the next three lines if necessary
-// arduino pins and their connection to the nes joystick
-// default: digital pin 2=strobe, 3=clock, 4=data
-// see readme.txt for game pad pinout
-
-// -- actually, let's just eliminate this since people seem to be having
-// -- trouble with it.. stick with specifying the pin numbers as 
-// -- arguments to the constructor
-
-// SNESpad::SNESpad() {
-//     SNESpad::SNESpad(2,3,4);
-// }
-
 // constructor
 SNESpad::SNESpad(int strobe, int clock, int data)
   : m_strobe (strobe),

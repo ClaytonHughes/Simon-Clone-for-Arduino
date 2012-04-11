@@ -11,6 +11,9 @@
 Input* Input::spInstance = NULL;
 
 Input::Input()
+:
+curPad(0),
+prevPad(0)
 {
   pinMode(DIFF_SWITCH_PIN, INPUT);  
   padInput = new SNESpad(SNESPAD_STROBE_PIN, SNESPAD_CLOCK_PIN, SNESPAD_DATA_PIN);
@@ -29,9 +32,35 @@ Input& Input::Get()
   return *spInstance;
 }
 
+void Input::Update()
+{
+  prevPad = curPad;
+  curPad = padInput->buttons();
+}
+
 int Input::Buttons()
 {
   return padInput->buttons();
+}
+
+int Input::Pressed()
+{
+  return curPad & ~prevPad;
+}
+
+int Input::Released()
+{
+  return ~curPad & prevPad;
+}
+
+int Input::Held()
+{
+  return curPad & prevPad;
+}
+
+int Input::Difficulty()
+{
+  return digitalRead(DIFF_SWITCH_PIN) == HIGH ? 1 : 0;
 }
 
 // Returns the button being pressed by the user. If no button
@@ -125,4 +154,5 @@ boolean Input::isPressed(int color)
     return false;
   }
 }
+
 

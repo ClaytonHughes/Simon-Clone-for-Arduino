@@ -14,7 +14,6 @@ const int SNESPAD_DATA_PIN =  4; // red
 // Difficulty switch -- if the game starts when it's HIGH, it's hard!
 const int DIFF_SWITCH_PIN = 13;
 
-
 // Output
 const int RED_LED_PIN = 7;
 const int GREEN_LED_PIN = 8;

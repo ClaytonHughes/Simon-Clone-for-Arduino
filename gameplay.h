@@ -6,16 +6,9 @@
 #define GAMEPLAY_H
 
 #include "Arduino.h"
-#include "SNESpad.h"
-#include "pitches.h"
-#include "MelodyPlayer.h"
-#include "pins.h"
-
 
 // Number of successful turns required to win; set when the game starts depending on DIFF_SWITCH_PIN
 extern int turnsUntilWin;
-
-extern boolean superHardMode;
 
 // Array to hold colors used so far
 extern int colorChain[100];
@@ -24,10 +17,6 @@ extern int delayBetweenLights;
 
 // LEDs
 extern int LEDDisplayTime; // time to show the LED in ms
-extern const int FastLEDDisplayTime; // Time to show LED in ms during attract mode 
-
-// Color loop for attract mode
-extern const int attractModeColors[30];
 
 // Time to play a Simon Says sound in ms (should probably match LEDDisplayTime)
 extern const int soundPlayTime;
@@ -50,9 +39,6 @@ extern int red_button_state;
 extern int green_button_state;
 extern int blue_button_state;
 extern int yellow_button_state;
-
-// MelodyPlayer object
-extern MelodyPlayer melodyPlayer;
 
 // Outputs a random integer between 0 and 3 (corresponding to a color)
 int randomColor();

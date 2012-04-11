@@ -11,8 +11,14 @@ class Input
 {
 public:
   static Input& Get();
+  void Update();
   
   int Buttons();
+  int Pressed();
+  int Released();
+  int Held();
+  
+  int Difficulty();
 
   // Returns the button being pressed by the user. If no button
   // is being pressed, returns -1.
@@ -31,6 +37,8 @@ private:
 
   static Input* spInstance;
   SNESpad* padInput;
+  int prevPad;
+  int curPad;
 };
 
 #endif
