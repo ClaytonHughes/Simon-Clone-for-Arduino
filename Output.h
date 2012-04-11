@@ -14,7 +14,8 @@ public:
   void Update(int dT);
 
   // Displays a color and plays the corresponding sound
-  void SetLight(int light, int duration);
+  void SetLight(int color, int duration);
+  void SetTone(int color, int duraction);
   
   void playColorAndSound(int, int, boolean);
 
@@ -44,6 +45,7 @@ private:
   MelodyPlayer* melodyPlayer;
   int mCurTime;
   int lightOffTime[4];
+  int soundOffTime;
 };
 
 #endif

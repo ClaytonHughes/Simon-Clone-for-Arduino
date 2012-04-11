@@ -39,6 +39,10 @@ private:
 
 /////////////////////////////////////////////////
 
+class State;
+class ShowSeqState;
+class ReadSeqState;
+
 // Once the game has started.
 class GameMode :
 public Mode
@@ -48,9 +52,15 @@ public:
   virtual Mode* Update(int dT);
   virtual ~GameMode() {}
 private:
+  State* curState;
+  int turnNo;
   int turnsUntilWin;
   int LEDDisplayTime;
   int delayBetweenLights; // Wait this time (ms) between light display; changes depending on difficulty mode
+  int colorChain[100];
+  
+  friend class ShowSeqState;
+  friend class ReadSeqState;
 };
 
 

@@ -36,8 +36,10 @@ void loop()
   
   Mode* newMode = currentMode->Update(dT);
   if(newMode != currentMode)
+  {
     delete currentMode;
-  currentMode = newMode;
+    currentMode = newMode;
+  }
 }
 
 

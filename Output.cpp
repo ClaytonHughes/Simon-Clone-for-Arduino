@@ -21,6 +21,7 @@ const int greenTone = NOTE_D5;
 const int blueTone = NOTE_E5;
 const int yellowTone = NOTE_B5;
 
+const int colorTones[] = {redTone, greenTone, blueTone, yellowTone};
 
 
 
@@ -57,6 +58,11 @@ void Output::Update(int dT)
       digitalWrite(RED_LED_PIN + i, LOW);
     }
   }
+  
+  if(soundOffTime < mCurTime)
+  {
+    noTone(SPEAKER_PIN);
+  }
 }
 
 // Turn on LED corresponding to the color
@@ -64,6 +70,12 @@ void Output::SetLight(int color, int duration)
 {
   digitalWrite(RED_LED_PIN + color, HIGH);
   lightOffTime[color] = mCurTime + duration;
+}
+
+void Output::SetTone(int color, int duration)
+{
+  tone(SPEAKER_PIN, colorTones[color], duration);
+  soundOffTime = mCurTime + duration * 1.3;
 }
 
 // Displays a color and plays the corresponding sound
