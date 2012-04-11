@@ -1,5 +1,5 @@
 /* 
-    Various settings related to gameplay.
+ Various settings related to gameplay.
  */
 
 #ifndef GAMEPLAY_H
@@ -54,4 +54,9 @@ extern int yellow_button_state;
 // MelodyPlayer object
 extern MelodyPlayer melodyPlayer;
 
+// Outputs a random integer between 0 and 3 (corresponding to a color)
+int randomColor();
+
+
 #endif
+

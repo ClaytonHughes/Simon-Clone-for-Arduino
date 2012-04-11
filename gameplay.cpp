@@ -43,5 +43,9 @@ int green_button_state;
 int blue_button_state;
 int yellow_button_state;
 
-// MelodyPlayer object
-MelodyPlayer melodyPlayer;
+// Outputs a random integer between 0 and 3 (corresponding to a color)
+int randomColor()
+{
+    return (int)random(0, 4);
+}
+

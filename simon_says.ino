@@ -9,25 +9,15 @@
  
  */
 
-#include "MelodyPlayer.h"
 #include "pins.h"
 #include "gameplay.h"
-#include "lights.h"
 #include "Input.h"
+#include "Output.h"
 
 void setup()
 {
   Input::Get();
-
-  // Set up pin modes for output
-  pinMode(RED_LED_PIN, OUTPUT);
-  pinMode(GREEN_LED_PIN, OUTPUT);
-  pinMode(BLUE_LED_PIN, OUTPUT);
-  pinMode(YELLOW_LED_PIN, OUTPUT);
-  pinMode(SPEAKER_PIN, OUTPUT);
-
-  // Use unconnected analog pin 1 as a random seed
-  randomSeed(analogRead(A1));
+  Output::Get();
 }
 
 // Loop through a "attract mode" light pattern until the user hits
@@ -62,7 +52,7 @@ void loop()
     // If the user's done with the cheat code, trigger the easter egg
     if (cheatCode_i == easterEggCheatCodeLength)
     {
-      melodyPlayer.playEasterEggMelody();
+      Output::Get().PlayEasterEggMelody();
       superHardMode = true;
       cheatCode_i = 0;
     }
@@ -71,8 +61,8 @@ void loop()
 
     // Loop color pattern--display each color for FastLEDDisplayTime ms
     // (broken into 32 parts, to increase sampling rate)
-    playColorAndSound(attractModeColors[color_i], FastLEDDisplayTime / 32, false);
-    clearLights();
+    Output::Get().playColorAndSound(attractModeColors[color_i], FastLEDDisplayTime / 32, false);
+    Output::Get().clearLights();
     timesDisplayed++;
     if (timesDisplayed > 31)
     {
@@ -137,8 +127,8 @@ void mainGame()
     for(int i = 0; i <= turnNo; i++)
     {
       delay(delayBetweenLights);
-      playColorAndSound(colorChain[i], LEDDisplayTime, true);
-      clearLights();
+      Output::Get().playColorAndSound(colorChain[i], LEDDisplayTime, true);
+      Output::Get().clearLights();
     }
 
     // Now, get user input and ensure it matches the pattern
@@ -152,7 +142,7 @@ void mainGame()
       if (pressedColor != -1)
       {
         // Play color and sound
-        playPressedButtonColorAndSound();
+        Output::Get().playPressedButtonColorAndSound();
 
         // Check if correct
         if (pressedColor == colorChain[correctPresses])
@@ -184,13 +174,13 @@ void mainGame()
   // If user won, play victory song and go to attract mode loop
   if (wonGame)
   {
-    melodyPlayer.playWinningMelody(turnsUntilWin);
+    Output::Get().PlayWinningMelody(turnsUntilWin);
     return;
   }
   // Otherwise, play losing song and go to attract mode loop
   else
   {
-    melodyPlayer.playLosingMelody();
+    Output::Get().PlayLosingMelody();
     return;
   }   
 }

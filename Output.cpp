@@ -3,22 +3,38 @@
  */
 
 #include "Arduino.h"
-#include "lights.h"
-#include "SNESpad.h"
+#include "Output.h"
 #include "MelodyPlayer.h"
 #include "pins.h"
 #include "gameplay.h"
+#include "Output.h"
 #include "Input.h"
 
+Output* Output::spInstance = NULL;
 
-// Outputs a random integer between 0 and 3 (corresponding to a color)
-int randomColor()
+Output::Output()
 {
-    return (int)random(0, 4);
+  pinMode(RED_LED_PIN, OUTPUT);
+  pinMode(GREEN_LED_PIN, OUTPUT);
+  pinMode(BLUE_LED_PIN, OUTPUT);
+  pinMode(YELLOW_LED_PIN, OUTPUT);
+  pinMode(SPEAKER_PIN, OUTPUT);
+  
+  melodyPlayer = new MelodyPlayer();
+  
+  spInstance = this;
+}
+
+Output& Output::Get()
+{
+  if(NULL == spInstance)
+    spInstance = new Output();
+    
+  return *spInstance;
 }
 
 // Displays a color and plays the corresponding sound
-void playColorAndSound(int color, int duration, boolean playAudio)
+void Output::playColorAndSound(int color, int duration, boolean playAudio)
 {
     int toneToPlay;
     // Turn on LED corresponding to the color
@@ -48,7 +64,7 @@ void playColorAndSound(int color, int duration, boolean playAudio)
     // unless you're not playing audio, in which case just wait
     if (playAudio)
     {
-        melodyPlayer.playTone(toneToPlay, duration);
+        melodyPlayer->playTone(toneToPlay, duration);
     }
     else
     {
@@ -58,7 +74,7 @@ void playColorAndSound(int color, int duration, boolean playAudio)
 
 
 // Lights the LED of the corresponding color
-void lightUpColor(int color)
+void Output::lightUpColor(int color)
 {
     switch (color)
     {
@@ -80,7 +96,7 @@ void lightUpColor(int color)
 }
 
 // Turn off all LEDs
-void clearLights()
+void Output::clearLights()
 {
     digitalWrite(RED_LED_PIN, LOW);
     digitalWrite(GREEN_LED_PIN, LOW);
@@ -89,7 +105,7 @@ void clearLights()
 }
 
 // Plays the appropriate sound given a certain color
-void playSoundForColor(int color)
+void Output::playSoundForColor(int color)
 {
     // Get frequency in hz
     int frequency;
@@ -116,7 +132,7 @@ void playSoundForColor(int color)
 }
 
 // Play the color and sound for a pressed button until the button is released
-void playPressedButtonColorAndSound()
+void Output::playPressedButtonColorAndSound()
 {
     // Grab first color pressed by the user
     int pressedColor = Input::Get().getPressedColor();
@@ -132,4 +148,19 @@ void playPressedButtonColorAndSound()
     }
     noTone(SPEAKER_PIN);
     clearLights();
+}
+
+void Output::PlayWinningMelody(int value)
+{
+  melodyPlayer->playWinningMelody(value);
+}
+
+void Output::PlayLosingMelody()
+{
+  melodyPlayer->playLosingMelody();
+}
+
+void Output::PlayEasterEggMelody()
+{
+  melodyPlayer->playEasterEggMelody();
 }

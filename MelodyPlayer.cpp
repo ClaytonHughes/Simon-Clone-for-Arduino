@@ -7,7 +7,7 @@
 #include "pitches.h"
 #include "pins.h"
 #include "gameplay.h"
-#include "lights.h"
+#include "Output.h"
 
 // Initialize static member variables
 const int MelodyPlayer::losingMelodyTempo = 100;
@@ -117,6 +117,6 @@ void MelodyPlayer::playMelody(const int tones[], const int beats[], const int te
         digitalWrite(curColor + RED_LED_PIN, HIGH);
         lastColor = curColor;
         playTone(tones[i], beats[i] * tempo);
-        clearLights();
+        Output::Get().clearLights();
     }
 }
