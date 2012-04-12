@@ -13,7 +13,8 @@ public:
   {
     return this;
   }
-  virtual ~Mode() {}
+  virtual ~Mode() {
+  }
 };
 
 
@@ -27,9 +28,10 @@ public Mode
 public:
   AttractMode();
   virtual Mode* Update(int dT);
-  virtual ~AttractMode() {}
+  virtual ~AttractMode() {
+  }
 private:
-  boolean CheckEasterEgg(int pressed);
+  boolean CheckEasterEggCode(int pressed);
   void UpdateLights(int dT);
   int easterEggPos;
   int attractLightPos;
@@ -48,17 +50,31 @@ class GameMode :
 public Mode
 {
 public:
-  GameMode(int difficulty);
+  GameMode(Difficulty difficulty);
   virtual Mode* Update(int dT);
-  virtual ~GameMode() {}
+  virtual ~GameMode() {
+  }
 private:
   State* curState;
+  
+  enum Condition
+  {
+    StillPlaying = 0,
+    Defeat,
+    Victory
+  };
+  
+  Condition condition;
+  
   int turnNo;
+  
   int turnsUntilWin;
   int LEDDisplayTime;
   int delayBetweenLights; // Wait this time (ms) between light display; changes depending on difficulty mode
-  int colorChain[100];
+  int fireworks;
   
+  Color colorChain[100];
+
   friend class ShowSeqState;
   friend class ReadSeqState;
 };
@@ -83,14 +99,47 @@ public:
       return mNext; 
     return this; 
   }
-  virtual ~DelayMode() {}
+  virtual ~DelayMode() {
+  }
 private:
   Mode* mNext;
   int mDelay;
 };
 
 
+/////////////////////////////////////////////////
+
+class Note;
+
+// Plays a song and goofs around with lights
+class MelodyMode :
+public Mode
+{
+public:
+  MelodyMode(Melody melody, Mode* next);
+  virtual Mode* Update(int dT);     
+
+private:
+  Mode* mNext;
+  
+  const Note* notes;
+  int tempo;
+  int length;
+  
+  Color color;
+  int note;
+  int nextTime;
+  int time;
+  
+  int fireworks;
+
+  void StartTone(int freq, int duration);
+  void PlayFireworks(int count);
+};
+
+
 #endif
+
 
 
 

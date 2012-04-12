@@ -16,7 +16,7 @@ enum Color {
 enum Melody {
   LOSE = 0,
   SECRET,
-  WIN,
+  WIN
 };
 
 

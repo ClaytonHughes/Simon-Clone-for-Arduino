@@ -2,14 +2,13 @@
 
  Simon Says Project
  
- Uses a speaker, four LEDs and four switches to play
- a game of "Simon Says" with the user. An additional
- switch can be used for resetting the game.
+ Uses a speaker, four LEDs and a Super Famicon controller
+ to play a game of "Simon Says" with the user. An additional
+ switch controls the difficulty of the game.
  
  */
 
 #include "Arduino.h"
-#include "pins.h"
 #include "Input.h"
 #include "Output.h"
 #include "Modes.h"
@@ -19,8 +18,11 @@ int curTime, prevTime;
 
 void setup()
 {
+  // Invoke ctor through Singleton:
   Input::Get();
   Output::Get();
+  
+  // Initialize mode and time for loop.
   currentMode = new AttractMode();
   prevTime = millis();
 }
@@ -30,16 +32,21 @@ void loop()
 {
   curTime = millis();
   int dT = curTime - prevTime;
+  // Compensate for millis() wrapping back to zero.
+  if(curTime < prevTime)
+    dT--;
   prevTime = curTime;
-  
+    
   Input::Get().Update();
   
-  Mode* newMode = currentMode->Update(dT);
-  if(newMode != currentMode)
+  Mode* nextMode = currentMode->Update(dT);
+  if(nextMode != currentMode)
   {
     delete currentMode;
-    currentMode = newMode;
+    currentMode = nextMode;
   }
+  
+  Output::Get().Update(dT);
 }
 
 

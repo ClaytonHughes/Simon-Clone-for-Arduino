@@ -5,7 +5,7 @@
 #ifndef LIGHTS_H
 #define LIGHTS_H
 
-class MelodyPlayer;
+#include "gameplay.h"
 
 class Output
 {
@@ -13,28 +13,18 @@ public:
   static Output& Get();
   void Update(int dT);
 
-  // Displays a color and plays the corresponding sound
-  void SetLight(int color, int duration);
-  void SetTone(int color, int duraction);
+  // Turns a color on, with unlimited duration.
+  void LightOn(Color color);
+  // Turns a color on, and sets the duration for it to turn off.
+  void LightOn(Color color, int duration);
+  void LightOff(Color color);
   
-  void playColorAndSound(int, int, boolean);
-
-  // Lights the LED of the corresponding color
-  void lightUpColor(int);
-
+  // Turns a tone on, and sets the duration for it to turn off.
+  void SetTone(Color color, int duraction);
+  void SetTone(int freq, int duraction);
+ 
   // Turn off all LEDs
-  void clearLights();
-
-  // Plays the appropriate sound given a certain color
-  void playSoundForColor(int);
-
-  // Play the color and sound for a pressed button until the button is released
-  void playPressedButtonColorAndSound();
-
-  void PlayWinningMelody(int difficulty);
-  void PlayLosingMelody();
-  void PlayEasterEggMelody();
-  
+  void ClearLights();
 
 private:
   Output();
@@ -42,8 +32,8 @@ private:
   Output& operator=(const Output& rhs);
   static Output* spInstance;
   
-  MelodyPlayer* melodyPlayer;
-  int mCurTime;
+  void SetLight(int color, int duration, int state);
+  
   int lightOffTime[4];
   int soundOffTime;
 };

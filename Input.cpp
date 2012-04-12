@@ -11,6 +11,9 @@
 
 Input* Input::spInstance = NULL;
 
+//                             RED,  GREEN,   BLUE, YELLOW
+const int colorButtons[] = {SNES_A, SNES_Y, SNES_X, SNES_B};
+
 Input::Input()
 :
 curPad(0),
@@ -39,93 +42,46 @@ void Input::Update()
   curPad = padInput->buttons();
 }
 
+
+// Buttons that are pressed this frame.
 int Input::Buttons()
 {
-  return padInput->buttons();
+  return curPad;
 }
 
+
+// Buttons that were pressed this frame, but not last
 int Input::Pressed()
 {
   return curPad & ~prevPad;
 }
 
+
+// Buttons that were not pressed this frame, but were last
 int Input::Released()
 {
   return ~curPad & prevPad;
 }
 
+// Buttons that were pressed both this and last frame
 int Input::Held()
 {
   return curPad & prevPad;
 }
 
-int Input::Difficulty()
+
+// The Button Flag for the specified color
+int Input::SNESCode(Color color)
+{
+  return colorButtons[color];
+}
+
+// State of the Difficulty Switch
+Difficulty Input::GetDifficulty()
 {
   return digitalRead(DIFF_SWITCH_PIN) == HIGH ? HARD : EASY;
 }
 
-// Returns the button being pressed by the user. If no button
-// is being pressed, returns -1.
-int Input::getPressedColor()
-{
-  // First update buttons states to make sure that we
-  // get the most recent information
-  //updateButtonStates();
 
-  // Now, get the button that's been pressed. If multiple
-  // buttons are pressed, get the first one in order.
-  //if (red_button_state)
-  //{
-  // return 0;
-  //}
-  //else if (green_button_state)
-  //{
-  //  return 1;
-  //}
-  //else if (blue_button_state)
-  //{
-  //  return 2;
-  //}
-  //else if (yellow_button_state)
-  //{
-  //  return 3;
-  //}
-  //else
-  //{
-  //  return -1;
-  //}
-}
-
-// Updates the current state for all of the color buttons
-void Input::updateButtonStates()
-{
-//  int state = padInput->buttons();
-//  red_button_state = state & SNES_A;
-//  green_button_state = state & SNES_Y;
-//  blue_button_state = state & SNES_X;
-//  yellow_button_state = state & SNES_B; 
-}
-
-// Checks to see if a certain button is being pressed
-boolean Input::isPressed(int color)
-{
-//  switch (color)
-//  {
-//  case 0:
-//    return red_button_state;
-//    break;
-//  case 1:
-//    return green_button_state;
-//    break;
-//  case 2:
-//    return blue_button_state;
-//    break;
-//  case 3:
-//    return yellow_button_state;
-//    break;
-//  default:
-//    return false;
-//  }
-}
 
 

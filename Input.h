@@ -5,37 +5,30 @@
 #ifndef BUTTONINPUT_H
 #define BUTTONINPUT_H
 
+#include "gameplay.h"
+
 class SNESpad;
 
 class Input
 {
 public:
-  static Input& Get();
+  static Input& Get();  
   void Update();
+                        
+  int Buttons();    // Buttons that are pressed this frame.
+  int Pressed();    // Buttons that were pressed this frame, but not last
+  int Released();   // Buttons that were not pressed this frame, but were last
+  int Held();       // Buttons that were pressed both this and last frame
+  Difficulty GetDifficulty(); // State of the Difficulty Switch
   
-  int Buttons();
-  int Pressed();
-  int Released();
-  int Held();
-  
-  int Difficulty();
-
-  // Returns the button being pressed by the user. If no button
-  // is being pressed, returns -1.
-  int getPressedColor();
-
-  // Updates the current state for all of the color buttons
-  void updateButtonStates();
-
-  // Checks to see if a certain button is being pressed
-  boolean isPressed(int);
+  int SNESCode(Color color); // The Button Flag for the specified color
 
 private:
   Input();
   Input(const Input& rhs);
   Input& operator=(const Input& rhs);
-
   static Input* spInstance;
+  
   SNESpad* padInput;
   int prevPad;
   int curPad;

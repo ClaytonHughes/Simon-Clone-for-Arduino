@@ -1,5 +1,4 @@
 #include "Modes.h"
-#include "MelodyPlayer.h"
 #include "gameplay.h"
 #include "SNESPad.h"
 #include "Input.h"
@@ -9,8 +8,15 @@ const int easterEggCheatCode[] = {
   SNES_UP, SNES_UP, SNES_DOWN, SNES_DOWN, SNES_LEFT, SNES_RIGHT, SNES_LEFT, SNES_RIGHT, SNES_B, SNES_A, SNES_START };
 const int easterEggCheatCodeLength = sizeof(easterEggCheatCode) / sizeof(easterEggCheatCode[0]);
 const int attractLEDDisplayTime = 120; // Time to show LED in ms during attract mode 
-const int attractModeColors[] = { 
-  2, 1, 3, 0, 2, 1, 3, 0, 2, 1, 3, 0, 2, 2, 2, 2, 0, 3, 1, 2, 0, 3, 1, 2, 0, 3, 1, 2, 2, 2 };
+const Color attractModeColors[] = { 
+  BLUE, GREEN, YELLOW, RED,
+  BLUE, GREEN, YELLOW, RED,
+  BLUE, GREEN, YELLOW, RED,
+  BLUE, BLUE, BLUE, BLUE,
+  RED, YELLOW, GREEN, BLUE,
+  RED, YELLOW, GREEN, BLUE,
+  RED, YELLOW, GREEN, BLUE,
+  BLUE, BLUE };
 const int attractModeColorsLength = sizeof(attractModeColors) / sizeof(attractModeColors[0]);
 
 AttractMode::AttractMode() :
@@ -26,15 +32,14 @@ Mode* AttractMode::Update(int dT)
 {
   int pressed = Input::Get().Pressed();
 
-  if(CheckEasterEgg(pressed))
+  if(CheckEasterEggCode(pressed))
     return new MelodyMode(SECRET, new GameMode(SUPERHARD));
 
   UpdateLights(dT);
 
   if(pressed & SNES_START)
   {
-    // Start was pressed, so start the game
-    int difficulty = Input::Get().Difficulty();    
+    Difficulty difficulty = Input::Get().GetDifficulty();    
     return new DelayMode(200, new GameMode(difficulty));
   }
   
@@ -42,7 +47,7 @@ Mode* AttractMode::Update(int dT)
 }
 
 
-boolean AttractMode::CheckEasterEgg(int pressed)
+boolean AttractMode::CheckEasterEggCode(int pressed)
 {
   if (pressed == easterEggCheatCode[easterEggPos])
   {
@@ -56,13 +61,7 @@ boolean AttractMode::CheckEasterEgg(int pressed)
   }
 
   // If the user's done with the cheat code, trigger the easter egg
-  if (easterEggPos == easterEggCheatCodeLength)
-  {
-    easterEggPos = 0;
-    return true;
-  }
-
-  return false;
+  return (easterEggPos == easterEggCheatCodeLength);
 }
 
 
@@ -72,7 +71,7 @@ void AttractMode::UpdateLights(int dT)
   if(attractLEDDisplayTime * attractLightPos < time)
   {
     // enough time has passed, we should start the next light in the sequence:
-    Output::Get().SetLight(attractModeColors[attractLightPos], attractLEDDisplayTime);
+    Output::Get().LightOn(attractModeColors[attractLightPos], attractLEDDisplayTime);
   }
   attractLightPos++;
 
